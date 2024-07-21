@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
+	"time"
 	// "golang.org/x/text/message"
 )
 
@@ -58,5 +59,10 @@ func randomFormat() string {
 	by specifying a random index
 	for the slice of formats.
 	*/
-	return formats[rand.Intn(len(formats))]
+	// rand.Seed(time.Now().UnixNano())
+
+	// Create a new random number generator with a custom seed (e.g., current time)
+	source := rand.NewSource(time.Now().UnixNano())
+	rng := rand.New(source)
+	return formats[rng.Intn(len(formats))]
 }
