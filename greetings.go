@@ -42,7 +42,7 @@ that associates each of the named people
 with a greeting message,
 and errors
 */
-func Hellos(names []string) (map[string]string, errors) {
+func Hellos(names []string) (map[string]string, error) {
 	/*
 		Create a messages map
 		to associate each of the received names (as a key)
