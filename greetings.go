@@ -1,5 +1,7 @@
 package greetings
 
+// Hellos() -> Hello() -> randomFormat()
+
 //  errors package : the Go standard library's errors package
 //	math/rand package : to generate a random number for selecting an item from the slice.
 import (
@@ -9,26 +11,6 @@ import (
 	"time"
 	// "golang.org/x/text/message"
 )
-
-// Hello returns a greeting for the named person.
-func Hello(name string) (string, error) {
-	// If no name was given, return an error with a message.
-	if name == "" {
-		return "", errors.New("empty name")
-	}
-	/*
-		In Hello, call the randomFormat function
-		to get a format for the message you'll return,
-		then use the 'format' and 'name' value together
-		to create the message:
-		Return a greeting that embeds the name in a message.
-	*/
-	message := fmt.Sprintf(randomFormat(), name)
-	/*
-		Return the message, or an error, as before.
-	*/
-	return message, nil
-}
 
 /*
 Add a Hellos function
@@ -71,9 +53,8 @@ func Hellos(names []string) (map[string]string, error) {
 		and a copy of the item's value.
 
 		You don't need the index,
-		so you use the Go "blank identifier"
-		(an underscore) to ignore it.
-		For more, see The blank identifier in Effective Go:
+		so you use the Go "blank identifier", an "underscore", to ignore it.
+		For more, see The "blank identifier" in Effective Go:
 		https://go.dev/doc/effective_go.html#blank
 
 		Loop through the received slice of names,
@@ -100,6 +81,31 @@ func Hellos(names []string) (map[string]string, error) {
 	return messages, nil
 }
 
+// Hello returns a greeting for the named person.
+func Hello(name string) (string, error) {
+
+	// Create a new random number generator with a custom seed (e.g., current time)
+	source := rand.NewSource(time.Now().UnixNano())
+	rng := rand.New(source)
+
+	// If no name was given, return an error with a message.
+	if name == "" {
+		return "", errors.New("empty name")
+	}
+	/*
+		In Hello, call the randomFormat function
+		to get a format for the message you'll return,
+		then use the 'format' and 'name' value together
+		to create the message:
+		Return a greeting that embeds the name in a message.
+	*/
+	message := fmt.Sprintf(randomFormat(rng), name)
+	/*
+		Return the message, or an error, as before.
+	*/
+	return message, nil
+}
+
 /*
 Add a randomFormat function
 that returns a randomly selected format as a greeting message.
@@ -109,7 +115,7 @@ in other words, it's not exported.
 randomFormat returns one of a set of greeting messages.
 The returned message is selected at random.
 */
-func randomFormat() string {
+func randomFormat(rng *rand.Rand) string {
 	/*
 		In randomFormat,
 		declare a formats "slice" with three message formats.
@@ -131,8 +137,5 @@ func randomFormat() string {
 	*/
 	// rand.Seed(time.Now().UnixNano())
 
-	// Create a new random number generator with a custom seed (e.g., current time)
-	source := rand.NewSource(time.Now().UnixNano())
-	rng := rand.New(source)
 	return formats[rng.Intn(len(formats))]
 }
