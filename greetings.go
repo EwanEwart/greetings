@@ -25,6 +25,11 @@ with a greeting message,
 and errors
 */
 func Hellos(names []string) (map[string]string, error) {
+
+	// Create a new random number generator with a custom seed (e.g., current time)
+	source := rand.NewSource(time.Now().UnixNano())
+	rng := rand.New(source)
+
 	/*
 		Create a messages map
 		to associate each of the received names (as a key)
@@ -67,7 +72,7 @@ func Hellos(names []string) (map[string]string, error) {
 			This helps reduce duplication
 			while also leaving both functions in place.
 		*/
-		message, err := Hello(name)
+		message, err := Hello(name, rng)
 		if err != nil {
 			return nil, err
 		}
@@ -82,11 +87,7 @@ func Hellos(names []string) (map[string]string, error) {
 }
 
 // Hello returns a greeting for the named person.
-func Hello(name string) (string, error) {
-
-	// Create a new random number generator with a custom seed (e.g., current time)
-	source := rand.NewSource(time.Now().UnixNano())
-	rng := rand.New(source)
+func Hello(name string, rng *rand.Rand) (string, error) {
 
 	// If no name was given, return an error with a message.
 	if name == "" {
